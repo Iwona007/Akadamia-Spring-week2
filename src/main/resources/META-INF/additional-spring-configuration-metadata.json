@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "price.tax",
+      "type": "java.lang.String",
+      "description": "Description for price.tax."
+  }
+] }
