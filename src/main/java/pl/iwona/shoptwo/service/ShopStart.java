@@ -15,17 +15,12 @@ public class ShopStart {
     private double sum;
 
     public ShopStart() {
-        Product prod1 = new Product("memory card", priceBetween(50, 300));
-        Product prod2 = new Product("pendrive", priceBetween(50, 300));
-        Product prod3 = new Product("procesor Intel Core", priceBetween(50, 300));
-        Product prod4 = new Product("headphones", priceBetween(50, 300));
-        Product prod5 = new Product("RAM", priceBetween(50, 300));
         products = new ArrayList<>();
-        products.add(prod1);
-        products.add(prod2);
-        products.add(prod3);
-        products.add(prod4);
-        products.add(prod5);
+        products.add(new Product("memory card", priceBetween(50, 300)));
+        products.add(new Product("pendrive", priceBetween(50, 300)));
+        products.add(new Product("procesor Intel Core", priceBetween(50, 300)));
+        products.add(new Product("headphones", priceBetween(50, 300)));
+        products.add(new Product("RAM", priceBetween(50, 300)));
     }
 
     public List<Product> getProducts() {
