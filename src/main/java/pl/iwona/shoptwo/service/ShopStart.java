@@ -1,53 +1,33 @@
 package pl.iwona.shoptwo.service;
 
+import java.math.BigDecimal;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.iwona.shoptwo.model.Product;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Profile("Start")
 @Service
-public class ShopStart {
-
-    private List<Product> products;
-    private double sum;
+public class ShopStart implements Shop {
 
     public ShopStart() {
-        products = new ArrayList<>();
-        products.add(new Product("memory card", priceBetween(50, 300)));
-        products.add(new Product("pendrive", priceBetween(50, 300)));
-        products.add(new Product("procesor Intel Core", priceBetween(50, 300)));
-        products.add(new Product("headphones", priceBetween(50, 300)));
-        products.add(new Product("RAM", priceBetween(50, 300)));
+        productsList.add(new Product("memory card", sumPrice()));
+        productsList.add(new Product("pendrive", sumPrice()));
+        productsList.add(new Product("procesor Intel Core", sumPrice()));
+        productsList.add(new Product("headphones", sumPrice()));
+        productsList.add(new Product("RAM", sumPrice()));
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    private static double priceBetween(double min, double max) {
-        double range = max - min + 1;
-        double a1 = (int) (Math.random() * range) + min;
-        return a1;
-    }
-
-    private void sumOfPrice() {
-        for (int i = 0; i < products.size(); i++) {
-            sum += products.get(i).getPrice();
-//            Math.round(sum);
-        }
-        System.out.println("Suma razem: " + sum);
-    }
-
-    private void showProductList() {
-        products.forEach(System.out::println);
-    }
-
+    @Override
     @EventListener(ApplicationReadyEvent.class)
-    public void show() {
-        showProductList();
-        sumOfPrice();
+    public void sumBasket() {
+        BigDecimal sum = BigDecimal.valueOf(0);
+        for (Product product : productsList) {
+            System.out.println("Product: " + product.getName() + ", price: " + product.getPrice() + " PLN");
+            sum = sum.add(product.getPrice());
+        }
+        System.out.println("Sum: " + sum + " PLN");
     }
 }
+

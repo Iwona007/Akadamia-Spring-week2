@@ -1,6 +1,7 @@
 package pl.iwona.shoptwo.service;
 
 
+import java.math.RoundingMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -8,41 +9,48 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import pl.iwona.shoptwo.model.Product;
+
+import static java.math.BigDecimal.valueOf;
 
 
-@Component
+@Service
 @Profile("plus")
-public class ShopPlus {
+public class ShopPlus implements Shop{
 
     @Value("${price.tax}")
-    private double tax;
-
-    private ShopStart shopStart;
+    private BigDecimal tax;
 
     @Autowired
-    public ShopPlus(ShopStart shopStart) {
-        this.shopStart = shopStart;
+    public ShopPlus() {
+        productsList.add(new Product("memory card", sumPrice()));
+        productsList.add(new Product("pendrive", sumPrice()));
+        productsList.add(new Product("procesor Intel Core", sumPrice()));
+        productsList.add(new Product("headphones", sumPrice()));
+        productsList.add(new Product("RAM", sumPrice()));
     }
 
-//        public double priceWithTax2() {
-//        double withTax = 0;
-//        for (int i = 0; i < shopStart.getProducts().size(); i++) {
-//            withTax = shopStart.getProducts().get(i).getPrice() * (1 + tax);
-//            System.out.println("caena prodóktów z podatkiem" + " " +withTax);
-//        }
-//        return withTax;
-//    }
-
-    public void priceWithTax() {
-        shopStart.getProducts().stream()
-                .map(price -> price.getPrice() * (1 + tax))
-                .collect(Collectors.toList())
-                .forEach(System.out::println);
-    }
-
+    @Override
     @EventListener(ApplicationReadyEvent.class)
-    public void showPlus() {
-        priceWithTax();
+    public void sumBasket() {
+        BigDecimal sum = BigDecimal.valueOf(0);
+        BigDecimal sumTax = BigDecimal.valueOf(0);
+        BigDecimal sumWithTax = BigDecimal.valueOf(0);
+
+        for (Product product: productsList) {
+            BigDecimal productTax = product.getPrice().multiply(tax).divide(new BigDecimal(100)).setScale(2, RoundingMode.CEILING);
+            BigDecimal productWithTax = product.getPrice().add(productTax);
+            System.out.println("Product: " + product.getName() + ", price: " + product.getPrice() +
+                    " PLN, tax: " + productTax + " PLN, price with tax: " + productWithTax + " PLN.");
+            sum = sum.add(product.getPrice());
+            sumTax = sumTax.add(productTax);
+            sumWithTax = sumWithTax.add(productWithTax);
+        }
+        System.out.println("Sum: " + sum + " PLN");
+        System.out.println("Tax sum: " + sumTax + " PLN");
+        System.out.println("Sum with tax: " + sumWithTax + " PLN");
     }
 }

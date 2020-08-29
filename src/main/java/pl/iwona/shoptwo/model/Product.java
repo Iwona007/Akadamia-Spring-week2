@@ -1,16 +1,17 @@
 package pl.iwona.shoptwo.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
 
     private String name;
-    private double price;
+    private BigDecimal price;
 
     public Product() {
     }
 
-    public Product(String name, double price) {
+    public Product(String name, BigDecimal price) {
         this.name = name;
         this.price = price;
     }
@@ -19,7 +20,7 @@ public class Product {
         this.name = name;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -27,7 +28,7 @@ public class Product {
         return name;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
